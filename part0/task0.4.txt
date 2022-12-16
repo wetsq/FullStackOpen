@@ -1,0 +1,23 @@
+title tehtävä 0.4
+
+
+note over selain:
+selain lähettää formin datan palvelimelle
+end note
+
+selain->palvelin: HTTPS POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+note over palvelin:
+palvelin pakottaa selaimen lataamaan sivun uudestaan,
+mikä aiheuttaa kaiken sivun datan uudelleenpyytämisen
+end note
+
+palvelin->selain: redirect /exampleapp/notes
+selain->palvelin: HTTPS GET https://studies.cs.helsinki.fi/exampleapp/notes
+palvelin->selain: HTML-koodi
+selain->palvelin: HTTPS GET https://studies.cs.helsinki.fi/exampleapp/main.css
+palvelin->selain: main.css
+selain->palvelin: HTTPS GET https://studies.cs.helsinki.fi/exampleapp/main.js
+palvelin->selain: main.js
+selain->palvelin: HTTPS GET https://studies.cs.helsinki.fi/exampleapp/data.json
+palvelin->selain: data.json
