@@ -1,0 +1,11 @@
+title tehtävä 0.6
+
+note over selain:
+data lähetetään palvelimelle ja muokataan HTML-koodia vastaamaan uutta dataa
+end note
+
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over palvelin:
+data lisätään palvelimen tietokantaan
+end note
