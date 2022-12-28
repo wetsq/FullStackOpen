@@ -49,23 +49,40 @@ const App = () => {
         const removablePerson = persons.filter(person => person.name === newName)
         const changedPerson = {...removablePerson[0], number: newNumber}
 
-        setPersons(persons.map(person => person.name === newName ? changedPerson : person))
         personService.update(removablePerson[0].id, newPerson)
+          .then(response => {
+            setPersons(persons.map(person => person.name === newName ? changedPerson : person))
 
-        setErrorMessage({text:`Changed ${newName} number to ${newNumber}`, positive:true})
-        setTimeout(() => {
-          setErrorMessage({text:null, positive:true})
-        }, 4000)
+            setErrorMessage({text:`Changed ${newName} number to ${newNumber}`, positive:true})
+            setTimeout(() => {
+            setErrorMessage({text:null, positive:true})
+            }, 4000)
+          })
+          .catch(error => {
+            setErrorMessage({text: error.response.data.error, positive:false})
+            setTimeout(() => {
+            setErrorMessage({text:null, positive:true})
+            }, 4000)
+          })
+
+
       }
     } else {
       personService.create(newPerson)
       .then(response => {
         setPersons(persons.concat(response))
-      })
-      setErrorMessage({text:`Added ${newName}`, positive:true})
+
+        setErrorMessage({text:`Added ${newName}`, positive:true})
         setTimeout(() => {
           setErrorMessage({text:null, positive:true})
         }, 4000)
+      })
+      .catch(error => {
+        setErrorMessage({text: error.response.data.error, positive:false})
+        setTimeout(() => {
+          setErrorMessage({text:null, positive:true})
+        }, 4000)
+      })
     }
     setNewName('')
     setNewNumber('')    
