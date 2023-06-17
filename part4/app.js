@@ -4,8 +4,10 @@ const app = express()
 const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
 const mongoose = require('mongoose')
+mongoose.set('strictQuery', false)
+require('dotenv').config()
 
-mongoose.connect(config.MONGODB_URL)
+mongoose.connect(process.env.MONGODB_URI)
 
 app.use(cors())
 app.use(express.static('build'))
