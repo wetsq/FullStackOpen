@@ -58,7 +58,6 @@ const mostLikes = (blogs) => {
     for (i in blogs) {
         if (authors.find(author => author.author === blogs[i].author)) {
             const author = authors.find(author => author.author === blogs[i].author).author
-            console.log(author)
             authors[authors.map(a => a.author).indexOf(author)].likes += Number(blogs[i].likes)
         }
         else {
