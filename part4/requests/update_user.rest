@@ -1,0 +1,8 @@
+PUT http://localhost:3003/api/users/64915f2face3fbf34012e19f
+Content-Type: application/json
+
+{
+    "username": "jani",
+    "name": "Teemu Teekkari",
+    "blogs": ["6490c7808b38072ed77786df"]
+}
