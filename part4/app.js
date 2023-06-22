@@ -34,6 +34,12 @@ const userExtractor = async (request, response, next) => {
     next()
 }
 
+
+if (process.env.NODE_ENV.trim() === 'test') {
+    const testRouter = require('./controllers/test')
+    app.use('/api/test', testRouter)
+}
+
 app.use(cors())
 app.use(express.static('build'))
 app.use(express.json())
@@ -42,5 +48,6 @@ app.use(tokenExtractor)
 app.use('/api/blogs', userExtractor, blogsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
+
 
 module.exports = app
