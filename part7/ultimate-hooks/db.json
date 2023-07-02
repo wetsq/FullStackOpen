@@ -1,0 +1,54 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "content": "custom hooks are awesome"
+    },
+    {
+      "id": 2,
+      "content": "best feature ever <3"
+    },
+    {
+      "content": "jermiah",
+      "id": 3
+    },
+    {
+      "content": "allah",
+      "id": 4
+    },
+    {
+      "content": "jeremiah",
+      "id": 5
+    },
+    {
+      "content": "säsääsäsäs",
+      "id": 6
+    },
+    {
+      "content": "jeeesus",
+      "id": 7
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "Matti Luukkainen",
+      "number": "040-12344565"
+    },
+    {
+      "id": 2,
+      "name": "Tarja Halonen",
+      "number": "040-2223334"
+    },
+    {
+      "name": "matti meikäläinen",
+      "number": "030223333",
+      "id": 3
+    },
+    {
+      "name": "masa",
+      "number": "mainio",
+      "id": 4
+    }
+  ]
+}

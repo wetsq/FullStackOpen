@@ -1,0 +1,10 @@
+PUT http://localhost:3003/api/blogs/64916079ace3fbf34012e1a1
+Content-Type: application/json
+
+{
+    "title": "jaa jaa joo joo",
+    "author": "ononon",
+    "url": "www.blogi.com",
+    "likes": 90,
+    "user": "64909134dbd4eb910be4d3c3"
+}
