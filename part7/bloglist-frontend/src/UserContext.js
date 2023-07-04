@@ -2,10 +2,10 @@ import { createContext, useReducer } from 'react'
 
 const userReducer = (state, action) => {
   switch (action.type) {
-  case 'SET_USER':
-    return action.payload
-  default:
-    return state
+    case 'SET_USER':
+      return action.payload
+    default:
+      return state
   }
 }
 

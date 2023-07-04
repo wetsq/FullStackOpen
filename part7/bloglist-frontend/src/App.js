@@ -8,12 +8,25 @@ import NotificationContext from './NotificationContext'
 import UserContext from './UserContext'
 import { useQuery, useQueryClient, useMutation } from 'react-query'
 import { BrowserRouter, Link, Route, Routes, useParams } from 'react-router-dom'
+import {
+  TextField,
+  Button,
+  Alert,
+  AlertTitle,
+  AppBar,
+  Toolbar,
+} from '@mui/material'
 
 const Notification = (params) => {
   if (params.notification === null) {
     return null
   }
-  return <h2>{params.notification}</h2>
+  return (
+    <Alert severity="error">
+      <AlertTitle>login error</AlertTitle>
+      <h2>{params.notification}</h2>
+    </Alert>
+  )
 }
 
 const User = ({ users }) => {
@@ -21,7 +34,7 @@ const User = ({ users }) => {
     return null
   }
   const id = useParams().id
-  const user = users.find(us => us.id === id)
+  const user = users.find((us) => us.id === id)
   return (
     <div>
       <h2>{user.name}</h2>
@@ -39,18 +52,22 @@ const Users = ({ users }) => {
   if (!users) {
     return null
   }
-  return(
+  return (
     <div>
       <h2>Users</h2>
       <table>
         <tbody>
           <tr>
             <th></th>
-            <th><strong>blogs created</strong></th>
+            <th>
+              <strong>blogs created</strong>
+            </th>
           </tr>
           {users.map((us) => (
             <tr key={us.id}>
-              <th><Link to={`/users/${us.id}`}>{us.name}</Link></th>
+              <th>
+                <Link to={`/users/${us.id}`}>{us.name}</Link>
+              </th>
               <th>{us.blogs.length}</th>
             </tr>
           ))}
@@ -66,34 +83,40 @@ const SingleBlog = ({ blogs, handleLike, handleComment }) => {
     return null
   }
   const id = useParams().id
-  const blog = blogs.find(us => us.id === id)
+  const blog = blogs.find((us) => us.id === id)
   return (
     <div>
-      <h2>{blog.title} {blog.author}</h2>
+      <h2>
+        {blog.title} {blog.author}
+      </h2>
       <a href={blog.url}>{blog.url}</a>
       <br />
       {blog.likes} likes
-      <button onClick={() => handleLike(blog)}>like</button>
+      <Button variant="outlined" onClick={() => handleLike(blog)}>
+        like
+      </Button>
       <br />
       added by {blog.user.name}
       <h3>comments</h3>
-      <form onSubmit={() => {
-        handleComment({ comment, blog })
-        setComment('')
-      }}>
-        <input
-          type='text'
-          name='comment'
+      <form
+        onSubmit={() => {
+          handleComment({ comment, blog })
+          setComment('')
+        }}
+      >
+        <TextField
+          type="text"
+          name="comment"
           value={comment}
           onChange={({ target }) => setComment(target.value)}
         />
-        <button type='submit'>add comment</button>
+        <Button variant="contained" type="submit">
+          add comment
+        </Button>
       </form>
       <ul>
         {blog.comments.map((comment) => (
-          <li key={comment}>
-            {comment}
-          </li>
+          <li key={comment}>{comment}</li>
         ))}
       </ul>
     </div>
@@ -107,42 +130,52 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [notification, setNotificationDispatch] = useContext(NotificationContext)
+  const [notification, setNotificationDispatch] =
+    useContext(NotificationContext)
 
   const blogFormRef = useRef()
   const queryClient = useQueryClient()
 
-  const result = useQuery(
-    'blogs',
-    blogService.getAll
-  )
+  const centered = {
+    display: 'grid',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '50vh',
+  }
 
-  const userResult = useQuery(
-    'users',
-    userService.getAll
-  )
+  const align = {
+    margin: 'auto',
+    width: '50%',
+  }
+
+  const result = useQuery('blogs', blogService.getAll)
+
+  const userResult = useQuery('users', userService.getAll)
 
   const blogs = result.data
   const users = userResult.data
 
   const newBlogMutation = useMutation(
-    () => blogService.post(user.token, title, author, url, user), {
+    () => blogService.post(user.token, title, author, url, user),
+    {
       onSuccess: () => {
         queryClient.invalidateQueries('blogs')
         queryClient.invalidateQueries('users')
-      }
+      },
     }
   )
 
   const likeBlogMutation = useMutation(
-    (blog) => blogService.put(user.token, blog), {
-      onSuccess: () => queryClient.invalidateQueries('blogs')
+    (blog) => blogService.put(user.token, blog),
+    {
+      onSuccess: () => queryClient.invalidateQueries('blogs'),
     }
   )
 
   const commentBlogMutation = useMutation(
-    (blog) => blogService.put(user.token, blog), {
-      onSuccess: () => queryClient.invalidateQueries('blogs')
+    (blog) => blogService.put(user.token, blog),
+    {
+      onSuccess: () => queryClient.invalidateQueries('blogs'),
     }
   )
 
@@ -158,7 +191,10 @@ const App = () => {
     event.preventDefault()
     const response = await loginService.post(username, password)
     if (response === null) {
-      setNotificationDispatch({ type: 'SET_NOTIFICATION', payload: '!!! username or password invalid !!!' })
+      setNotificationDispatch({
+        type: 'SET_NOTIFICATION',
+        payload: '!!! username or password invalid !!!',
+      })
       setTimeout(() => {
         setNotificationDispatch({ type: 'RESET_NOTIFICATION' })
       }, 5000)
@@ -174,7 +210,10 @@ const App = () => {
     event.preventDefault()
     newBlogMutation.mutate()
 
-    setNotificationDispatch({ type: 'SET_NOTIFICATION', payload: '!!! new blog added !!!' })
+    setNotificationDispatch({
+      type: 'SET_NOTIFICATION',
+      payload: '!!! new blog added !!!',
+    })
     setTimeout(() => {
       setNotificationDispatch({ type: 'RESET_NOTIFICATION' })
     }, 5000)
@@ -186,7 +225,7 @@ const App = () => {
   }
 
   const handleLike = async (blog) => {
-    likeBlogMutation.mutate({ ...blog, likes: blog.likes += 1 })
+    likeBlogMutation.mutate({ ...blog, likes: (blog.likes += 1) })
   }
 
   const handleComment = (props) => {
@@ -195,8 +234,10 @@ const App = () => {
     if (props.comment === '') {
       return
     }
-    commentBlogMutation.mutate({ ...props.blog, comments: props.blog.comments.concat(props.comment) })
-
+    commentBlogMutation.mutate({
+      ...props.blog,
+      comments: props.blog.comments.concat(props.comment),
+    })
   }
 
   if (result.isLoading) {
@@ -205,13 +246,14 @@ const App = () => {
 
   if (user === null) {
     return (
-      <>
+      <div style={centered}>
         <h1>log in to application</h1>
         <Notification notification={notification} />
         <form onSubmit={handleLogin}>
           <div>
-            Username:
-            <input
+            <TextField
+              label="Username"
+              variant="filled"
               type="text"
               value={username}
               name="Username"
@@ -220,8 +262,9 @@ const App = () => {
             />
           </div>
           <div>
-            Password:
-            <input
+            <TextField
+              label="Password"
+              variant="filled"
               type="text"
               value={password}
               name="Password"
@@ -229,60 +272,85 @@ const App = () => {
               onChange={({ target }) => setPassword(target.value)}
             />
           </div>
-          <button type="submit" id="loginButton">
+          <Button variant="contained" type="submit" id="loginButton">
             login
-          </button>
+          </Button>
         </form>
-      </>
+      </div>
     )
   }
   return (
     <BrowserRouter>
-      <div>
-        <Link style={{ padding: 5 }} to='/'>blogs</Link>
-        <Link style={{ padding: 5 }} to='/users'>users</Link>
-        logged in as {user.username}
-        <button style={{ margin: 5 }}
-          onClick={() => {
-            window.localStorage.removeItem('blogAppUser')
-          }}
-        >
-        logout
-        </button>
-      </div>
-      <h2>blog app</h2>
-      <Notification notification={notification} />
+      <AppBar position="static">
+        <Toolbar>
+          <Button component={Link} color="inherit" to="/">
+            blogs
+          </Button>
+          <Button component={Link} color="inherit" to="/users">
+            users
+          </Button>
+          <p style={{ margin: 5 }}>logged in as {user.username}</p>
+          <Button
+            color="error"
+            variant="contained"
+            size="small"
+            onClick={() => {
+              window.localStorage.removeItem('blogAppUser')
+            }}
+          >
+            logout
+          </Button>
+        </Toolbar>
+      </AppBar>
 
+      <div style={align}>
+        <h2>blog app</h2>
+        <Notification notification={notification} />
 
-      <Routes>
-        <Route path='/' element={
-          <div>
-            <Togglable buttonLabel="create blog" ref={blogFormRef}>
-              <BlogForm
-                handleBlogSubmit={handleBlogSubmit}
-                title={title}
-                setTitle={setTitle}
-                author={author}
-                setAuthor={setAuthor}
-                url={url}
-                setUrl={setUrl}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div>
+                <Togglable buttonLabel="create blog" ref={blogFormRef}>
+                  <BlogForm
+                    handleBlogSubmit={handleBlogSubmit}
+                    title={title}
+                    setTitle={setTitle}
+                    author={author}
+                    setAuthor={setAuthor}
+                    url={url}
+                    setUrl={setUrl}
+                  />
+                </Togglable>
+
+                {blogs
+                  .sort((blog1, blog2) => blog2.likes - blog1.likes)
+                  .map((blog) => (
+                    <div key={blog.id}>
+                      <Link key={blog.id} to={`/blogs/${blog.id}`}>
+                        {blog.title} {blog.author}
+                      </Link>
+                    </div>
+                  ))}
+              </div>
+            }
+          />
+
+          <Route path="/users" element={<Users users={users} />} />
+          <Route path="/users/:id" element={<User users={users} />} />
+          <Route
+            path="/blogs/:id"
+            element={
+              <SingleBlog
+                blogs={blogs}
+                handleLike={handleLike}
+                handleComment={handleComment}
               />
-            </Togglable>
-
-            {blogs
-              .sort((blog1, blog2) => blog2.likes - blog1.likes)
-              .map((blog) => (
-                <div key={blog.id}>
-                  <Link key={blog.id} to={`/blogs/${blog.id}`} >{blog.title} {blog.author}</Link>
-                </div>
-              ))}
-          </div>
-        } />
-
-        <Route path='/users' element={<Users users={users} />} />
-        <Route path='/users/:id' element={<User users={users} />} />
-        <Route path='/blogs/:id' element={<SingleBlog blogs={blogs} handleLike={handleLike} handleComment={handleComment}/>} />
-      </Routes>
+            }
+          />
+        </Routes>
+      </div>
     </BrowserRouter>
   )
 }

@@ -1,4 +1,5 @@
 import propTypes from 'prop-types'
+import { Button, TextField } from '@mui/material'
 
 const BlogForm = (props) => {
   return (
@@ -7,8 +8,7 @@ const BlogForm = (props) => {
 
       <form onSubmit={props.handleBlogSubmit}>
         <div>
-          title:
-          <input
+          <TextField
             type="text"
             value={props.title}
             name="title"
@@ -18,8 +18,7 @@ const BlogForm = (props) => {
           />
         </div>
         <div>
-          author:
-          <input
+          <TextField
             type="text"
             value={props.author}
             name="author"
@@ -29,8 +28,7 @@ const BlogForm = (props) => {
           />
         </div>
         <div>
-          url:
-          <input
+          <TextField
             type="text"
             value={props.url}
             name="url"
@@ -39,9 +37,9 @@ const BlogForm = (props) => {
             onChange={({ target }) => props.setUrl(target.value)}
           />
         </div>
-        <button type="submit" id="submitButton">
+        <Button variant="contained" type="submit" id="submitButton">
           send
-        </button>
+        </Button>
       </form>
     </>
   )
